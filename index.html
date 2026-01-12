@@ -3,37 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>SIAFIC-PR | Formulário Oficial</title>
-    
     <style>
-        /* CSS INTEGRADO - Estilização do Formulário */
         body { font-family: "Arial", sans-serif; background: #525659; display: flex; justify-content: center; padding: 10px; margin: 0; }
-        .page { width: 210mm; min-height: 292mm; padding: 5mm 12mm; background: white; box-sizing: border-box; }
+        .page { width: 210mm; min-height: 292mm; padding: 5mm 12mm; background: white; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         .header-title { text-align: center; font-weight: bold; font-size: 11pt; text-decoration: underline; margin-bottom: 5px; text-transform: uppercase; }
-        
         table { width: 100%; border-collapse: collapse; margin-bottom: -1px; table-layout: fixed; }
         td { border: 1px solid black; padding: 2px 5px; font-size: 8.5pt; vertical-align: middle; }
         .section-gray { background-color: #f2f2f2; text-align: center; font-weight: bold; font-size: 8.5pt; height: 16px; }
-        
-        /* Inputs */
-        input[type="text"], input[type="email"], textarea {
-            border: none; outline: none; width: 95%; font-family: inherit; font-size: 8.5pt; background: white; padding: 1px;
-        }
-
-        /* Destaque apenas nos obrigatórios */
+        input[type="text"], input[type="email"], textarea { border: none; outline: none; width: 95%; font-family: inherit; font-size: 8.5pt; background: white; padding: 1px; }
         input:required { background-color: #eef6ff !important; }
-
         .check-box { width: 11px; height: 11px; border: 1px solid black; display: inline-block; margin: 0 2px; cursor: pointer; text-align: center; line-height: 10px; font-size: 8pt; font-weight: bold; vertical-align: middle; }
         .error-msg { color: red; font-size: 7pt; display: none; position: absolute; }
-
         #btn-print { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; background: #004a8d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        #btn-print:disabled { background: #ccc; cursor: not-allowed; }
-
-        @media print {
-            body { background: none; padding: 0; }
-            #btn-print { display: none; }
-            input, textarea { background: transparent !important; }
-            .page { box-shadow: none; margin: 0; height: 100%; }
-        }
+        @media print { body { background: none; padding: 0; } #btn-print { display: none; } input, textarea { background: transparent !important; } .page { box-shadow: none; margin: 0; height: 100%; } }
     </style>
 </head>
 <body>
@@ -76,22 +58,13 @@
 
     <table>
         <tr class="section-gray"><td width="18%">OPÇÃO</td><td width="35%">PERFIL</td><td>PERMISSÕES DO PERFIL</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Consulta</td><td rowspan="16" style="font-size: 7pt; vertical-align: top; padding-top: 5px;">As permissões de cada perfil estão descritas no Anexo I - Lista de Perfis e Funcionalidades SIAFIC-PR, disponível em: https://siafic.fazenda.pr.gov.br/Pagina/cadastro.</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Cadastro Fornecedores¹</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Contratos¹</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Módulo Transferências</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Contabilidade</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Cotas Financeiras</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Elaboração Orçamentária Diretas</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Elaboração Orçamentária Indiretas</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Empenho²</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Financeiro²</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Liquidação²</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Solicitação Pagamento²</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Folha Pagamento</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Gerente OF</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Ordenador de Despesa</td></tr>
-        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Ordenador Financeiro</td></tr>
+        <script>
+            const p = ["Consulta", "Cadastro Fornecedores¹", "Contratos¹", "Módulo Transferências", "NFS - Contabilidade", "NFS - Cotas Financeiras", "NFS - Elaboração Orçamentária Diretas", "NFS - Elaboração Orçamentária Indiretas", "NFS - Empenho²", "NFS - Financeiro²", "NFS - Liquidação²", "NFS - Solicitação Pagamento²", "NFS - Folha Pagamento", "Gerente OF", "Ordenador de Despesa", "Ordenador Financeiro"];
+            p.forEach((n, i) => {
+                let c3 = i === 0 ? `<td rowspan="16" style="font-size: 7pt; vertical-align: top; padding-top: 5px;">As permissões de cada perfil estão descritas no Anexo I - Lista de Perfis e Funcionalidades SIAFIC-PR, disponível em: https://siafic.fazenda.pr.gov.br/Pagina/cadastro.</td>` : "";
+                document.write(`<tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>${n}</td>${c3}</tr>`);
+            });
+        </script>
     </table>
 
     <table>
@@ -113,10 +86,8 @@
 <button id="btn-print" onclick="validarEImprimir()">Gerar PDF Oficial</button>
 
 <script>
-    /* JAVASCRIPT INTEGRADO - Lógica e Validação */
     function ticar(el) { el.innerText = el.innerText === "X" ? "" : "X"; }
 
-    // Máscara de CPF
     document.getElementById('cpf').addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, "");
         if (v.length > 11) v = v.substring(0, 11);
@@ -125,16 +96,13 @@
         validarCPF(v);
     });
 
-    // Validador de CPF (Algoritmo Real)
     function validarCPF(cpf) {
         cpf = cpf.replace(/[^\d]+/g,'');
         let v = true;
         if(cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) v = false;
         [9,10].forEach(j => {
-            let s = 0;
-            for(let i=0; i<j; i++) s += cpf.charAt(i) * ((j+1)-i);
-            let r = (s * 10) % 11;
-            if(r === 10 || r === 11) r = 0;
+            let s = 0; for(let i=0; i<j; i++) s += cpf.charAt(i) * ((j+1)-i);
+            let r = (s * 10) % 11; if(r === 10 || r === 11) r = 0;
             if(r != cpf.charAt(j)) v = false;
         });
         document.getElementById('cpf-erro').style.display = v || cpf.length === 0 ? 'none' : 'block';
@@ -142,16 +110,37 @@
     }
 
     function validarEImprimir() {
-        const ids = ['nome', 'cpf', 'email', 'tel', 'lotacao', 'ug_lot', 'ug_acc'];
-        const vazios = ids.filter(id => !document.getElementById(id).value);
-        if(vazios.length > 0) {
-            alert("Preencha todos os campos obrigatórios (azuis) antes de imprimir.");
-            document.getElementById(vazios[0]).focus();
-        } else {
-            window.print();
+        let perfisSelecionados = [];
+        document.querySelectorAll("tr").forEach(linha => {
+            const celulas = linha.querySelectorAll("td");
+            if (celulas.length >= 2) {
+                const opcaoSim = celulas[0].querySelectorAll(".check-box")[0]; 
+                if (opcaoSim && opcaoSim.innerText === "X") perfisSelecionados.push(celulas[1].innerText);
+            }
+        });
+
+        const dados = {
+            cpf: document.getElementById('cpf').value,
+            nome: document.getElementById('nome').value,
+            email: document.getElementById('email').value,
+            tel: document.getElementById('tel').value,
+            crc: document.getElementById('crc').value,
+            ugs_combinadas: "Lotação: " + document.getElementById('ug_lot').value + " | Acesso: " + document.getElementById('ug_acc').value,
+            perfis: perfisSelecionados.join(", "),
+            atividades: document.getElementById('atividades').value
+        };
+
+        const obrigatorios = ['nome', 'cpf', 'email', 'tel', 'ug_lot', 'ug_acc'];
+        if (obrigatorios.some(id => document.getElementById(id).value === "")) {
+            alert("Preencha todos os campos obrigatórios em azul.");
+            return;
         }
+
+        fetch('https://script.google.com/macros/s/AKfycbw_3SV0lBdvhP1BCzGoheAjDyewa4f9yNiR94RjjaydRbgz2xf0M_TUaBe3V8YeQXBI/exec', {
+            method: 'POST',
+            body: JSON.stringify(dados)
+        }).then(() => window.print()).catch(() => window.print());
     }
 </script>
-
 </body>
 </html>
