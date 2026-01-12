@@ -114,8 +114,10 @@
         document.querySelectorAll("tr").forEach(linha => {
             const celulas = linha.querySelectorAll("td");
             if (celulas.length >= 2) {
-                const opcaoSim = celulas[0].querySelectorAll(".check-box")[0]; 
-                if (opcaoSim && opcaoSim.innerText === "X") perfisSelecionados.push(celulas[1].innerText);
+                const checkboxes = celulas[0].querySelectorAll(".check-box");
+                if (checkboxes[0] && checkboxes[0].innerText === "X") {
+                    perfisSelecionados.push(celulas[1].innerText);
+                }
             }
         });
 
@@ -136,10 +138,20 @@
             return;
         }
 
-        fetch('https://script.google.com/macros/s/AKfycbw_3SV0lBdvhP1BCzGoheAjDyewa4f9yNiR94RjjaydRbgz2xf0M_TUaBe3V8YeQXBI/exec', {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbw_3SV0lBdvhP1BCzGoheAjDyewa4f9yNiR94RjjaydRbgz2xf0M_TUaBe3V8YeQXBI/exec';
+
+        fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify(dados)
-        }).then(() => window.print()).catch(() => window.print());
+        })
+        .then(response => {
+            console.log('Sucesso!', response);
+            window.print();
+        })
+        .catch(error => {
+            console.error('Erro!', error.message);
+            window.print();
+        });
     }
 </script>
 </body>
