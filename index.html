@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>SIAFIC-PR | Formulário Oficial</title>
+    
+    <style>
+        /* CSS INTEGRADO - Estilização do Formulário */
+        body { font-family: "Arial", sans-serif; background: #525659; display: flex; justify-content: center; padding: 10px; margin: 0; }
+        .page { width: 210mm; min-height: 292mm; padding: 5mm 12mm; background: white; box-sizing: border-box; }
+        .header-title { text-align: center; font-weight: bold; font-size: 11pt; text-decoration: underline; margin-bottom: 5px; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: -1px; table-layout: fixed; }
+        td { border: 1px solid black; padding: 2px 5px; font-size: 8.5pt; vertical-align: middle; }
+        .section-gray { background-color: #f2f2f2; text-align: center; font-weight: bold; font-size: 8.5pt; height: 16px; }
+        
+        /* Inputs */
+        input[type="text"], input[type="email"], textarea {
+            border: none; outline: none; width: 95%; font-family: inherit; font-size: 8.5pt; background: white; padding: 1px;
+        }
+
+        /* Destaque apenas nos obrigatórios */
+        input:required { background-color: #eef6ff !important; }
+
+        .check-box { width: 11px; height: 11px; border: 1px solid black; display: inline-block; margin: 0 2px; cursor: pointer; text-align: center; line-height: 10px; font-size: 8pt; font-weight: bold; vertical-align: middle; }
+        .error-msg { color: red; font-size: 7pt; display: none; position: absolute; }
+
+        #btn-print { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; background: #004a8d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        #btn-print:disabled { background: #ccc; cursor: not-allowed; }
+
+        @media print {
+            body { background: none; padding: 0; }
+            #btn-print { display: none; }
+            input, textarea { background: transparent !important; }
+            .page { box-shadow: none; margin: 0; height: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page" id="form-content">
+    <div class="header-title">FORMULÁRIO PARA INCLUSÃO E ALTERAÇÃO DE PERFIL DE USUÁRIO SISTEMA SIAFIC-PR</div>
+
+    <table>
+        <tr>
+            <td width="15%">Finalidade:</td>
+            <td>Cadastro (<span class="check-box" onclick="ticar(this)"></span>)</td>
+            <td>Alteração (<span class="check-box" onclick="ticar(this)"></span>)</td>
+            <td>Inativação (<span class="check-box" onclick="ticar(this)"></span>)</td>
+        </tr>
+    </table>
+
+    <table><tr class="section-gray"><td>Dados do Usuário</td></tr></table>
+
+    <table>
+        <tr>
+            <td colspan="2">Nome Completo: <input type="text" id="nome" required></td>
+            <td width="30%">CPF: <input type="text" id="cpf" maxlength="14" required> <div id="cpf-erro" class="error-msg">CPF Inválido</div></td>
+        </tr>
+        <tr>
+            <td colspan="2">E-mail Corporativo Pessoal: <input type="email" id="email" required></td>
+            <td>Contador: Sim <span class="check-box" onclick="ticar(this)"></span> / Não <span class="check-box" onclick="ticar(this)"></span></td>
+        </tr>
+        <tr>
+            <td width="30%">Telefone: <input type="text" id="tel" required></td>
+            <td colspan="2">Número CRC: <input type="text" id="crc"></td>
+        </tr>
+        <tr>
+            <td>Estagiário: Sim <span class="check-box" onclick="ticar(this)"></span> / Não <span class="check-box" onclick="ticar(this)"></span></td>
+            <td>Terceiro: Sim <span class="check-box" onclick="ticar(this)"></span> / Não <span class="check-box" onclick="ticar(this)"></span></td>
+            <td>Local de Lotação (sigla): <input type="text" id="lotacao" required></td>
+        </tr>
+    </table>
+
+    <p style="font-size: 7.5pt; margin: 2px 0; font-weight: bold;">Marcar SIM nos Perfis aos quais o usuário poderá ter acesso e nos demais marcar NÃO.</p>
+
+    <table>
+        <tr class="section-gray"><td width="18%">OPÇÃO</td><td width="35%">PERFIL</td><td>PERMISSÕES DO PERFIL</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Consulta</td><td rowspan="16" style="font-size: 7pt; vertical-align: top; padding-top: 5px;">As permissões de cada perfil estão descritas no Anexo I - Lista de Perfis e Funcionalidades SIAFIC-PR, disponível em: https://siafic.fazenda.pr.gov.br/Pagina/cadastro.</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Cadastro Fornecedores¹</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Contratos¹</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Módulo Transferências</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Contabilidade</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Cotas Financeiras</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Elaboração Orçamentária Diretas</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Elaboração Orçamentária Indiretas</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Empenho²</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Financeiro²</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Liquidação²</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Solicitação Pagamento²</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>NFS - Folha Pagamento</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Gerente OF</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Ordenador de Despesa</td></tr>
+        <tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>Ordenador Financeiro</td></tr>
+    </table>
+
+    <table>
+        <tr class="section-gray"><td>Código(s) da(s) Unidade(s) Gestora(s) a que o usuário terá acesso:</td></tr>
+        <tr><td>Código UG de Lotação: <input type="text" id="ug_lot" required></td></tr>
+        <tr><td>Códigos UG's de acesso: <input type="text" id="ug_acc" required></td></tr>
+        <tr>
+            <td><div style="font-size: 7.5pt; font-weight: bold;">Processos e atividades complementares:</div>
+                <textarea rows="2" id="atividades" style="width:100%; border:none; resize:none; background:white;"></textarea></td>
+        </tr>
+    </table>
+
+    <div style="margin-top: 15px; display: flex; justify-content: space-around; text-align: center; font-size: 8pt;">
+        <div style="border-top: 1px solid black; width: 40%; padding-top: 3px;">Assinatura do Servidor</div>
+        <div style="border-top: 1px solid black; width: 40%; padding-top: 3px;">Ordenador de Despesa</div>
+    </div>
+</div>
+
+<button id="btn-print" onclick="validarEImprimir()">Gerar PDF Oficial</button>
+
+<script>
+    /* JAVASCRIPT INTEGRADO - Lógica e Validação */
+    function ticar(el) { el.innerText = el.innerText === "X" ? "" : "X"; }
+
+    // Máscara de CPF
+    document.getElementById('cpf').addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, "");
+        if (v.length > 11) v = v.substring(0, 11);
+        v = v.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        e.target.value = v;
+        validarCPF(v);
+    });
+
+    // Validador de CPF (Algoritmo Real)
+    function validarCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g,'');
+        let v = true;
+        if(cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) v = false;
+        [9,10].forEach(j => {
+            let s = 0;
+            for(let i=0; i<j; i++) s += cpf.charAt(i) * ((j+1)-i);
+            let r = (s * 10) % 11;
+            if(r === 10 || r === 11) r = 0;
+            if(r != cpf.charAt(j)) v = false;
+        });
+        document.getElementById('cpf-erro').style.display = v || cpf.length === 0 ? 'none' : 'block';
+        document.getElementById('btn-print').disabled = !v && cpf.length > 0;
+    }
+
+    function validarEImprimir() {
+        const ids = ['nome', 'cpf', 'email', 'tel', 'lotacao', 'ug_lot', 'ug_acc'];
+        const vazios = ids.filter(id => !document.getElementById(id).value);
+        if(vazios.length > 0) {
+            alert("Preencha todos os campos obrigatórios (azuis) antes de imprimir.");
+            document.getElementById(vazios[0]).focus();
+        } else {
+            window.print();
+        }
+    }
+</script>
+
+</body>
+</html>
