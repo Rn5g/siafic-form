@@ -11,12 +11,15 @@
         td { border: 1px solid black; padding: 2px 5px; font-size: 8.5pt; vertical-align: middle; }
         .section-gray { background-color: #f2f2f2; text-align: center; font-weight: bold; font-size: 8.5pt; height: 16px; }
         input[type="text"], input[type="email"], textarea { border: none; outline: none; width: 95%; font-family: inherit; font-size: 8.5pt; background: white; padding: 1px; }
-        /* Campos obrigatórios destacados em azul */
-        input:required, .req-field { background-color: #eef6ff !important; }
-        .check-box { width: 11px; height: 11px; border: 1px solid black; display: inline-block; margin: 0 2px; cursor: pointer; text-align: center; line-height: 10px; font-size: 8pt; font-weight: bold; vertical-align: middle; }
+        
+        /* DESTAQUE AZUL PARA CAMPOS OBRIGATÓRIOS */
+        input:required, .req-blue { background-color: #eef6ff !important; }
+        
+        .check-box { width: 11px; height: 11px; border: 1px solid black; display: inline-block; margin: 0 2px; cursor: pointer; text-align: center; line-height: 10px; font-size: 8pt; font-weight: bold; vertical-align: middle; background: white; }
         .error-msg { color: red; font-size: 7pt; display: none; position: absolute; }
         #btn-print { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; background: #004a8d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        @media print { body { background: none; padding: 0; } #btn-print { display: none; } input, textarea { background: transparent !important; } .page { box-shadow: none; margin: 0; height: 100%; } }
+        
+        @media print { body { background: none; padding: 0; } #btn-print { display: none; } input, textarea { background: transparent !important; } .page { box-shadow: none; margin: 0; height: 100%; } .req-blue { background: transparent !important; } }
     </style>
 </head>
 <body>
@@ -27,9 +30,9 @@
     <table>
         <tr>
             <td width="15%">Finalidade:</td>
-            <td class="req-field">Cadastro (<span class="check-box finalidade" onclick="ticarFinalidade(this)"></span>)</td>
-            <td class="req-field">Alteração (<span class="check-box finalidade" onclick="ticarFinalidade(this)"></span>)</td>
-            <td class="req-field">Inativação (<span class="check-box finalidade" onclick="ticarFinalidade(this)"></span>)</td>
+            <td class="req-blue">Cadastro (<span class="check-box fin-opt" onclick="ticarUnico(this)"></span>)</td>
+            <td class="req-blue">Alteração (<span class="check-box fin-opt" onclick="ticarUnico(this)"></span>)</td>
+            <td class="req-blue">Inativação (<span class="check-box fin-opt" onclick="ticarUnico(this)"></span>)</td>
         </tr>
     </table>
 
@@ -87,14 +90,16 @@
 <button id="btn-print" onclick="validarEImprimir()">Gerar PDF Oficial</button>
 
 <script>
+    // Função para ticar normal
     function ticar(el) { el.innerText = el.innerText === "X" ? "" : "X"; }
 
-    // Garante que apenas uma finalidade seja marcada por vez
-    function ticarFinalidade(el) {
-        document.querySelectorAll('.finalidade').forEach(box => box.innerText = "");
+    // Função para Finalidade (permite apenas uma escolha e é obrigatória)
+    function ticarUnico(el) {
+        document.querySelectorAll('.fin-opt').forEach(box => box.innerText = "");
         el.innerText = "X";
     }
 
+    // Máscara CPF
     document.getElementById('cpf').addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, "");
         if (v.length > 11) v = v.substring(0, 11);
@@ -117,17 +122,18 @@
     }
 
     function validarEImprimir() {
-        // Validação da Finalidade
-        let finalidadeSelecionada = false;
-        document.querySelectorAll('.finalidade').forEach(box => {
-            if (box.innerText === "X") finalidadeSelecionada = true;
+        // 1. Validar se Finalidade foi marcada
+        let finalidadeMarcada = false;
+        document.querySelectorAll('.fin-opt').forEach(box => {
+            if(box.innerText === "X") finalidadeMarcada = true;
         });
 
-        if (!finalidadeSelecionada) {
-            alert("Por favor, selecione a Finalidade (Cadastro, Alteração ou Inativação).");
+        if(!finalidadeMarcada) {
+            alert("ERRO: Selecione a FINALIDADE do formulário (Cadastro, Alteração ou Inativação).");
             return;
         }
 
+        // 2. Coletar Perfis
         let perfisSelecionados = [];
         document.querySelectorAll("tr").forEach(linha => {
             const celulas = linha.querySelectorAll("td");
@@ -139,6 +145,7 @@
             }
         });
 
+        // 3. Organizar Dados
         const dados = {
             cpf: document.getElementById('cpf').value,
             nome: document.getElementById('nome').value,
@@ -150,24 +157,22 @@
             atividades: document.getElementById('atividades').value
         };
 
+        // 4. Validar campos de texto obrigatórios (Azuis)
         const obrigatorios = ['nome', 'cpf', 'email', 'tel', 'ug_lot', 'ug_acc'];
         if (obrigatorios.some(id => document.getElementById(id).value === "")) {
-            alert("Preencha todos os campos obrigatórios em azul.");
+            alert("Preencha todos os campos obrigatórios destacados em azul.");
             return;
         }
 
+        // 5. Enviar e Imprimir
         const scriptURL = 'https://script.google.com/macros/s/AKfycbw_3SV0lBdvhP1BCzGoheAjDyewa4f9yNiR94RjjaydRbgz2xf0M_TUaBe3V8YeQXBI/exec';
 
         fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify(dados)
         })
-        .then(response => {
-            window.print();
-        })
-        .catch(error => {
-            window.print();
-        });
+        .then(() => window.print())
+        .catch(() => window.print());
     }
 </script>
 </body>
