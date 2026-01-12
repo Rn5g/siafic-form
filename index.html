@@ -63,10 +63,10 @@
     <table>
         <tr class="section-gray"><td width="18%">OPÇÃO</td><td width="35%">PERFIL</td><td>PERMISSÕES DO PERFIL</td></tr>
         <script>
-            const p = ["Consulta", "Cadastro Fornecedores¹", "Contratos¹", "Módulo Transferências", "NFS - Contabilidade", "NFS - Cotas Financeiras", "NFS - Elaboração Orçamentária Diretas", "NFS - Elaboração Orçamentária Indiretas", "NFS - Empenho²", "NFS - Financeiro²", "NFS - Liquidação²", "NFS - Solicitação Pagamento²", "NFS - Folha Pagamento", "Gerente OF", "Ordenador de Despesa", "Ordenador Financeiro"];
-            p.forEach((n, i) => {
-                let c3 = i === 0 ? `<td rowspan="16" style="font-size: 7pt; vertical-align: top; padding-top: 5px;">As permissões de cada perfil estão descritas no Anexo I - Lista de Perfis e Funcionalidades SIAFIC-PR, disponível em: https://siafic.fazenda.pr.gov.br/Pagina/cadastro.</td>` : "";
-                document.write(`<tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>${n}</td>${c3}</tr>`);
+            const perfisList = ["Consulta", "Cadastro Fornecedores¹", "Contratos¹", "Módulo Transferências", "NFS - Contabilidade", "NFS - Cotas Financeiras", "NFS - Elaboração Orçamentária Diretas", "NFS - Elaboração Orçamentária Indiretas", "NFS - Empenho²", "NFS - Financeiro²", "NFS - Liquidação²", "NFS - Solicitação Pagamento²", "NFS - Folha Pagamento", "Gerente OF", "Ordenador de Despesa", "Ordenador Financeiro"];
+            perfisList.forEach((n, i) => {
+                let cell3 = i === 0 ? `<td rowspan="16" style="font-size: 7pt; vertical-align: top; padding-top: 5px;">As permissões de cada perfil estão descritas no Anexo I - Lista de Perfis e Funcionalidades SIAFIC-PR, disponível em: https://siafic.fazenda.pr.gov.br/Pagina/cadastro.</td>` : "";
+                document.write(`<tr><td style="text-align:center"><span class="check-box" onclick="ticar(this)"></span> SIM <span class="check-box" onclick="ticar(this)"></span> NÃO</td><td>${n}</td>${cell3}</tr>`);
             });
         </script>
     </table>
@@ -90,16 +90,13 @@
 <button id="btn-print" onclick="validarEImprimir()">Gerar PDF Oficial</button>
 
 <script>
-    // Função para ticar normal
     function ticar(el) { el.innerText = el.innerText === "X" ? "" : "X"; }
 
-    // Função para Finalidade (permite apenas uma escolha e é obrigatória)
     function ticarUnico(el) {
         document.querySelectorAll('.fin-opt').forEach(box => box.innerText = "");
         el.innerText = "X";
     }
 
-    // Máscara CPF
     document.getElementById('cpf').addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, "");
         if (v.length > 11) v = v.substring(0, 11);
@@ -122,18 +119,18 @@
     }
 
     function validarEImprimir() {
-        // 1. Validar se Finalidade foi marcada
-        let finalidadeMarcada = false;
+        // --- TRAVA DA FINALIDADE ---
+        let finalidadeCheck = false;
         document.querySelectorAll('.fin-opt').forEach(box => {
-            if(box.innerText === "X") finalidadeMarcada = true;
+            if(box.innerText === "X") finalidadeCheck = true;
         });
 
-        if(!finalidadeMarcada) {
-            alert("ERRO: Selecione a FINALIDADE do formulário (Cadastro, Alteração ou Inativação).");
-            return;
+        if(!finalidadeCheck) {
+            alert("ERRO: Você deve selecionar a FINALIDADE (Cadastro, Alteração ou Inativação) antes de continuar.");
+            return; // PARA A EXECUÇÃO AQUI
         }
+        // ---------------------------
 
-        // 2. Coletar Perfis
         let perfisSelecionados = [];
         document.querySelectorAll("tr").forEach(linha => {
             const celulas = linha.querySelectorAll("td");
@@ -145,7 +142,6 @@
             }
         });
 
-        // 3. Organizar Dados
         const dados = {
             cpf: document.getElementById('cpf').value,
             nome: document.getElementById('nome').value,
@@ -157,22 +153,24 @@
             atividades: document.getElementById('atividades').value
         };
 
-        // 4. Validar campos de texto obrigatórios (Azuis)
         const obrigatorios = ['nome', 'cpf', 'email', 'tel', 'ug_lot', 'ug_acc'];
         if (obrigatorios.some(id => document.getElementById(id).value === "")) {
             alert("Preencha todos os campos obrigatórios destacados em azul.");
             return;
         }
 
-        // 5. Enviar e Imprimir
         const scriptURL = 'https://script.google.com/macros/s/AKfycbw_3SV0lBdvhP1BCzGoheAjDyewa4f9yNiR94RjjaydRbgz2xf0M_TUaBe3V8YeQXBI/exec';
 
         fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify(dados)
         })
-        .then(() => window.print())
-        .catch(() => window.print());
+        .then(() => {
+            window.print();
+        })
+        .catch(() => {
+            window.print();
+        });
     }
 </script>
 </body>
