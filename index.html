@@ -11,10 +11,14 @@
         td { border: 1px solid black; padding: 2px 5px; font-size: 8.5pt; vertical-align: middle; }
         .section-gray { background-color: #f2f2f2; text-align: center; font-weight: bold; font-size: 8.5pt; height: 16px; }
         input[type="text"], input[type="email"], textarea { border: none; outline: none; width: 95%; font-family: inherit; font-size: 8.5pt; background: white; padding: 1px; }
+        
+        /* PADRONIZAÇÃO VISUAL DE CAMPOS OBRIGATÓRIOS */
         input:required, .req-blue { background-color: #eef6ff !important; }
+        
         .check-box { width: 11px; height: 11px; border: 1px solid black; display: inline-block; margin: 0 2px; cursor: pointer; text-align: center; line-height: 10px; font-size: 8pt; font-weight: bold; vertical-align: middle; background: white; }
         .error-msg { color: red; font-size: 7pt; display: none; position: absolute; }
         #btn-print { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; background: #004a8d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        
         @media print { body { background: none; padding: 0; } #btn-print { display: none; } input, textarea { background: transparent !important; } .page { box-shadow: none; margin: 0; height: 100%; } .req-blue { background: transparent !important; } }
     </style>
 </head>
@@ -88,11 +92,13 @@
 <script>
     function ticar(el) { el.innerText = el.innerText.trim() === "X" ? "" : "X"; }
 
+    // Garante escolha única na Finalidade
     function ticarUnico(el) {
         document.querySelectorAll('.fin-opt').forEach(box => box.innerText = "");
         el.innerText = "X";
     }
 
+    // Máscara e validação de CPF
     document.getElementById('cpf').addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, "");
         if (v.length > 11) v = v.substring(0, 11);
@@ -115,39 +121,32 @@
     }
 
     function validarEImprimir() {
-        // --- NOVA VERIFICAÇÃO DE FINALIDADE (SUPER FORTE) ---
-        let finalidadeCheck = false;
-        const boxes = document.querySelectorAll('.fin-opt');
-        
-        boxes.forEach(box => {
-            if(box.innerText.trim() === "X") {
-                finalidadeCheck = true;
-            }
+        // --- VALIDAÇÃO DA FINALIDADE (SPAN) ---
+        let selecionouFinalidade = false;
+        document.querySelectorAll('.fin-opt').forEach(box => {
+            if(box.innerText.trim() === "X") selecionouFinalidade = true;
         });
 
-        if(!finalidadeCheck) {
-            alert("ATENÇÃO: Você esqueceu de marcar a FINALIDADE (Cadastro, Alteração ou Inativação).");
-            // Focar visualmente na área de finalidade
+        if(!selecionouFinalidade) {
+            alert("O campo 'Finalidade' é obrigatório. Por favor, selecione uma opção.");
             document.querySelector('.req-blue').scrollIntoView();
-            return; // TRAVA O CÓDIGO AQUI
+            return; // Bloqueia o processo
         }
 
-        // --- RESTANTE DA VALIDAÇÃO ---
+        // --- VALIDAÇÃO DOS CAMPOS INPUT ---
         const obrigatorios = ['nome', 'cpf', 'email', 'tel', 'ug_lot', 'ug_acc'];
-        let camposFaltando = false;
+        let camposIncompletos = false;
         
         obrigatorios.forEach(id => {
-            if(document.getElementById(id).value.trim() === "") {
-                camposFaltando = true;
-            }
+            if(document.getElementById(id).value.trim() === "") camposIncompletos = true;
         });
 
-        if (camposFaltando) {
+        if (camposIncompletos) {
             alert("Preencha todos os campos obrigatórios destacados em azul.");
-            return;
+            return; // Bloqueia o processo
         }
 
-        // Coletar Perfis para enviar
+        // --- ENVIO E IMPRESSÃO ---
         let perfisSelecionados = [];
         document.querySelectorAll("tr").forEach(linha => {
             const celulas = linha.querySelectorAll("td");
