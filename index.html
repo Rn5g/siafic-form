@@ -11,14 +11,10 @@
         td { border: 1px solid black; padding: 2px 5px; font-size: 8.5pt; vertical-align: middle; }
         .section-gray { background-color: #f2f2f2; text-align: center; font-weight: bold; font-size: 8.5pt; height: 16px; }
         input[type="text"], input[type="email"], textarea { border: none; outline: none; width: 95%; font-family: inherit; font-size: 8.5pt; background: white; padding: 1px; }
-        
-        /* DESTAQUE AZUL PARA CAMPOS OBRIGATÓRIOS */
         input:required, .req-blue { background-color: #eef6ff !important; }
-        
         .check-box { width: 11px; height: 11px; border: 1px solid black; display: inline-block; margin: 0 2px; cursor: pointer; text-align: center; line-height: 10px; font-size: 8pt; font-weight: bold; vertical-align: middle; background: white; }
         .error-msg { color: red; font-size: 7pt; display: none; position: absolute; }
         #btn-print { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; background: #004a8d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        
         @media print { body { background: none; padding: 0; } #btn-print { display: none; } input, textarea { background: transparent !important; } .page { box-shadow: none; margin: 0; height: 100%; } .req-blue { background: transparent !important; } }
     </style>
 </head>
@@ -90,7 +86,7 @@
 <button id="btn-print" onclick="validarEImprimir()">Gerar PDF Oficial</button>
 
 <script>
-    function ticar(el) { el.innerText = el.innerText === "X" ? "" : "X"; }
+    function ticar(el) { el.innerText = el.innerText.trim() === "X" ? "" : "X"; }
 
     function ticarUnico(el) {
         document.querySelectorAll('.fin-opt').forEach(box => box.innerText = "");
@@ -119,24 +115,45 @@
     }
 
     function validarEImprimir() {
-        // --- TRAVA DA FINALIDADE ---
+        // --- NOVA VERIFICAÇÃO DE FINALIDADE (SUPER FORTE) ---
         let finalidadeCheck = false;
-        document.querySelectorAll('.fin-opt').forEach(box => {
-            if(box.innerText === "X") finalidadeCheck = true;
+        const boxes = document.querySelectorAll('.fin-opt');
+        
+        boxes.forEach(box => {
+            if(box.innerText.trim() === "X") {
+                finalidadeCheck = true;
+            }
         });
 
         if(!finalidadeCheck) {
-            alert("ERRO: Você deve selecionar a FINALIDADE (Cadastro, Alteração ou Inativação) antes de continuar.");
-            return; // PARA A EXECUÇÃO AQUI
+            alert("ATENÇÃO: Você esqueceu de marcar a FINALIDADE (Cadastro, Alteração ou Inativação).");
+            // Focar visualmente na área de finalidade
+            document.querySelector('.req-blue').scrollIntoView();
+            return; // TRAVA O CÓDIGO AQUI
         }
-        // ---------------------------
 
+        // --- RESTANTE DA VALIDAÇÃO ---
+        const obrigatorios = ['nome', 'cpf', 'email', 'tel', 'ug_lot', 'ug_acc'];
+        let camposFaltando = false;
+        
+        obrigatorios.forEach(id => {
+            if(document.getElementById(id).value.trim() === "") {
+                camposFaltando = true;
+            }
+        });
+
+        if (camposFaltando) {
+            alert("Preencha todos os campos obrigatórios destacados em azul.");
+            return;
+        }
+
+        // Coletar Perfis para enviar
         let perfisSelecionados = [];
         document.querySelectorAll("tr").forEach(linha => {
             const celulas = linha.querySelectorAll("td");
             if (celulas.length >= 2) {
                 const checkboxes = celulas[0].querySelectorAll(".check-box");
-                if (checkboxes[0] && checkboxes[0].innerText === "X") {
+                if (checkboxes[0] && checkboxes[0].innerText.trim() === "X") {
                     perfisSelecionados.push(celulas[1].innerText);
                 }
             }
@@ -153,22 +170,14 @@
             atividades: document.getElementById('atividades').value
         };
 
-        const obrigatorios = ['nome', 'cpf', 'email', 'tel', 'ug_lot', 'ug_acc'];
-        if (obrigatorios.some(id => document.getElementById(id).value === "")) {
-            alert("Preencha todos os campos obrigatórios destacados em azul.");
-            return;
-        }
-
         const scriptURL = 'https://script.google.com/macros/s/AKfycbw_3SV0lBdvhP1BCzGoheAjDyewa4f9yNiR94RjjaydRbgz2xf0M_TUaBe3V8YeQXBI/exec';
 
         fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify(dados)
-        })
-        .then(() => {
+        }).then(() => {
             window.print();
-        })
-        .catch(() => {
+        }).catch(() => {
             window.print();
         });
     }
